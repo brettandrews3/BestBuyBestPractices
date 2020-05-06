@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Data;
-using System.IO;
+using System.Data; //used for the IDbConnection
+using System.IO; //input-output methods
 using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient; //allows access to MySqlConnection class
 
 namespace BestBuyBestPractices
 {
@@ -16,6 +16,7 @@ namespace BestBuyBestPractices
                 .Build();
 
             string connString = config.GetConnectionString("DefaultConnection");
+            //getting the value from DefaultConnection
 
             //var repo = new DepartmentRepository(connString); //Without Dapper
 
