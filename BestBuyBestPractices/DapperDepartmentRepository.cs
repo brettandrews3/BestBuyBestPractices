@@ -8,20 +8,22 @@ namespace BestBuyBestPractices
 {
     public class DapperDepartmentRepository : IDepartmentRepository
     {
-        private readonly IDbConnection _connection; //Constructor
+        private readonly IDbConnection _connection; //Constructor; can't set the connection anywhere but this constructor because it's readonly
         public DapperDepartmentRepository(IDbConnection connection)
         {
             _connection = connection;
         }
 
-        public IEnumerable<Department> GetAllDepartments()
+        public IEnumerable<Department> GetAllDepartments() //a collection of Departments
         {
             return _connection.Query<Department>("SELECT * FROM Departments");
+            //Maps all results from Query to our Department objects, aligning all columns with the class properties
         }
 
         public void InsertDepartment(string newDepartmentName)
         {
-           _connection.Execute("INSERT INTO Departments (Name) VALUES (@departmentName); ", new { departmentName = newDepartmentName });
+           _connection.Execute("INSERT INTO Departments (Name) VALUES (@departmentName); ",
+               new { departmentName = newDepartmentName });
 
 
         }
