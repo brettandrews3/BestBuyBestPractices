@@ -8,20 +8,20 @@ namespace BestBuyBestPractices
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            var config = new ConfigurationBuilder()
+        static IConfiguration config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            string connString = config.GetConnectionString("DefaultConnection");
-            //getting the value from DefaultConnection
+        static string connString = config.GetConnectionString("DefaultConnection");
+        //getting the value from DefaultConnection
+        IDbConnection conn = new MySqlConnection(connString);
 
-            //var repo = new DepartmentRepository(connString); //Without Dapper
+        static void Main(string[] args)
+        {
+            
 
-            IDbConnection conn = new MySqlConnection(connString);
-            var repo = new DapperDepartmentRepository(conn);
+            //var repo = new DapperDepartmentRepository(conn);
 
 
 
@@ -32,11 +32,38 @@ namespace BestBuyBestPractices
 
             public static void ListDepartments() //Updating from Michael's video
             {
-                var repo = new DepartmentDepository(conn)
+                var repo = new DapperDepartmentRepository(conn)
 
                 var departments = repo.GetDepartments();
+                foreach(var item in departments)
+                {
+                    Console.WriteLine($"{item.DepartmentID} {item.Name}");
+                }
             }
-            Console.WriteLine("Type a new Department name:");
+
+            public static void DepartmentUpdate()
+            {
+                var repo = new DapperDepartmentRepository(conn);
+
+                Console.WriteLine($"Would you like to update a department? Yes or no:");
+                if(Console.ReadLine().ToUpper() == "YES")
+                {
+                    Console.WriteLine($"What is the ID of the Department you would like to update?");
+                    var id = Convert.ToInt32(Console.ReadLine());
+
+                    Console.WriteLine($"What would you like to change the name of the department to?");
+
+                    var newName = Console.ReadLine();
+
+                    repo.UpdateDepartment(id, newName);
+                }
+            }
+        }
+    }
+}
+
+
+/* Console.WriteLine("Type a new Department name:");
 
             var newDepartment = Console.ReadLine();
 
@@ -48,6 +75,4 @@ namespace BestBuyBestPractices
             {
                 Console.WriteLine(dept.Name);
             }
-        }
-    }
-}
+*/
