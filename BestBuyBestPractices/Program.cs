@@ -16,23 +16,39 @@ namespace BestBuyBestPractices
         static string connString = config.GetConnectionString("DefaultConnection");
         //getting the value from DefaultConnection
         IDbConnection conn = new MySqlConnection(connString);
+        //Dapper is extending IDbConnection here and conforms to MySqlConnection
 
         static void Main(string[] args)
         {
-            
+            //created an instance so we can call methods that query the database
+            var prodRepo = new ProductRepository(conn);
 
-            //var repo = new DapperDepartmentRepository(conn);
+            Console.WriteLine($"What is the new product's name?");
+            var prodName = Console.ReadLine();
 
+            Console.WriteLine($"What is the new product's price?");
+            var price = Convert.ToDouble(Console.ReadLine());
 
+            Console.WriteLine($"What is the new product's category ID?");
+            var categoryID = Convert.ToInt32(Console.ReadLine());
 
+            //Method goes to database and inserts the new product
+            prodRepo.CreateProduct(prodName, price, categoryID);
+
+            //Call the GetAllProducts() using that instance, storing result in
+            //the products variable
+            var products = prodRepo.GetAllProducts();
+
+            //Print each product from the products collection to the console
+            foreach(var product in products)
             {
-                ListDepartments();
-                DepartmentUpdate();
+                Console.WriteLine($"{product.ProductID} {product.Name}");
             }
+            
 
             public static void ListDepartments() //Updating from Michael's video
             {
-                var repo = new DapperDepartmentRepository(conn)
+                var repo = new DepartmentRepository(conn)
 
                 var departments = repo.GetDepartments();
                 foreach(var item in departments)
@@ -43,7 +59,7 @@ namespace BestBuyBestPractices
 
             public static void DepartmentUpdate()
             {
-                var repo = new DapperDepartmentRepository(conn);
+                var repo = new DepartmentRepository(conn);
 
                 Console.WriteLine($"Would you like to update a department? Yes or no:");
                 if(Console.ReadLine().ToUpper() == "YES")

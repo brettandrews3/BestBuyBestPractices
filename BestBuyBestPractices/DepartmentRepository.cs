@@ -6,10 +6,10 @@ using Dapper;
 
 namespace BestBuyBestPractices
 {
-    public class DapperDepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : IDepartmentRepository
     {
         private readonly IDbConnection _connection; //Constructor; can't set the connection anywhere but this constructor because it's readonly
-        public DapperDepartmentRepository(IDbConnection connection)
+        public DepartmentRepository(IDbConnection connection)
         {
             _connection = connection;
         }
