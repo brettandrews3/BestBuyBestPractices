@@ -14,17 +14,22 @@ namespace BestBuyBestPractices
                 .Build();
 
         static string connString = config.GetConnectionString("DefaultConnection");
+
         //getting the value from DefaultConnection
-        IDbConnection conn = new MySqlConnection(connString);
+        static IDbConnection conn = new MySqlConnection(connString);
         //Dapper is extending IDbConnection here and conforms to MySqlConnection
 
         static void Main(string[] args)
         {
-            CreateAndListProducts();
+            ListProducts();
 
+            DeleteProduct();
 
+            ListProducts();
         }
-            public static void CreateAndListProducts()
+
+        //Create product
+        public static void CreateProduct()
             //Put all these steps under 1 method here so we don't have to repeat
             //all that code. It's static, so I can just call the method--no instance req'd.
             {
@@ -43,61 +48,52 @@ namespace BestBuyBestPractices
                 //Method goes to database and inserts the new product
                 prodRepo.CreateProduct(prodName, price, categoryID);
 
-                //Call the GetAllProducts() using that instance, storing result in
-                //the products variable
-                var products = prodRepo.GetAllProducts();
-
-                //Print each product from the products collection to the console
-                foreach (var product in products)
-                {
-                    Console.WriteLine($"{product.ProductID} {product.Name}");
-                }
-
+                ListProducts();
             }
-            /*
-            public static void ListDepartments() //Updating from Michael's video
+
+        //Read product info:
+        public static void ListProducts()
+        {
+            var prodRepo = new ProductRepository(conn);
+            //copy over instance of repository to connect with database
+            var products = prodRepo.GetAllProducts();
+
+            //Print each product from the products collection to the console
+            foreach (var product in products)
             {
-                var repo = new DepartmentRepository(conn)
-
-                var departments = repo.GetDepartments();
-                foreach(var item in departments)
-                {
-                    Console.WriteLine($"{item.DepartmentID} {item.Name}");
-                }
+                Console.WriteLine($"{product.ProductID} {product.Name}");
             }
+        }
 
-            public static void DepartmentUpdate()
-            {
-                var repo = new DepartmentRepository(conn);
+        //Update product name by its productID:
+        public static void UpdateProductName()
+        {
+            //Use our connection to reach the database
+            var prodRepo = new ProductRepository(conn);
 
-                Console.WriteLine($"Would you like to update a department? Yes or no:");
-                if(Console.ReadLine().ToUpper() == "YES")
-                {
-                    Console.WriteLine($"What is the ID of the Department you would like to update?");
-                    var id = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine($"What is the productID of the product you would like to update?");
+            var productID = Convert.ToInt32(Console.ReadLine());
 
-                    Console.WriteLine($"What would you like to change the name of the department to?");
+            Console.WriteLine($"What is the new name you would like for the product with id {productID}?");
+            var updatedName = Console.ReadLine();
 
-                    var newName = Console.ReadLine();
+            prodRepo.UpdateProductName(productID, updatedName); //method from the repository
 
-                    repo.UpdateDepartment(id, newName); 
-                }
-            }
-       */
+            ListProducts();
+        }
+
+        //Delete product data by its productID
+        public static void DeleteProduct()
+        //No return type needed: go to database, do something, and leave
+        {
+            var prodRepo = new ProductRepository(conn);
+
+            Console.WriteLine($"Please enter the productID of the product you want to delete:");
+            var productID = Convert.ToInt32(Console.ReadLine());
+
+            prodRepo.DeleteProduct(productID); //method from the repository
+
+            ListProducts();
+        }
     }
 }
-
-
-/* Console.WriteLine("Type a new Department name:");
-
-            var newDepartment = Console.ReadLine();
-
-            repo.InsertDepartment(newDepartment);
-
-            var departments = repo.GetAllDepartments();
-
-            foreach(var dept in departments)
-            {
-                Console.WriteLine(dept.Name);
-            }
-*/
