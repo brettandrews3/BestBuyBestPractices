@@ -6,7 +6,7 @@ namespace BestBuyBestPractices
     public interface IProductRepository
     {
         public IEnumerable<Product> GetAllProducts(); //stubbed-out method
-        void CreateProduct(string name, int price, int CategoryID);
+        void CreateProduct(string name, double price, int CategoryID);
     }
 }
 //"Anything that conforms to this interface must behave like this"

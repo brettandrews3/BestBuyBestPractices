@@ -20,32 +20,41 @@ namespace BestBuyBestPractices
 
         static void Main(string[] args)
         {
-            //created an instance so we can call methods that query the database
-            var prodRepo = new ProductRepository(conn);
+            CreateAndListProducts();
 
-            Console.WriteLine($"What is the new product's name?");
-            var prodName = Console.ReadLine();
 
-            Console.WriteLine($"What is the new product's price?");
-            var price = Convert.ToDouble(Console.ReadLine());
-
-            Console.WriteLine($"What is the new product's category ID?");
-            var categoryID = Convert.ToInt32(Console.ReadLine());
-
-            //Method goes to database and inserts the new product
-            prodRepo.CreateProduct(prodName, price, categoryID);
-
-            //Call the GetAllProducts() using that instance, storing result in
-            //the products variable
-            var products = prodRepo.GetAllProducts();
-
-            //Print each product from the products collection to the console
-            foreach(var product in products)
+        }
+            public static void CreateAndListProducts()
+            //Put all these steps under 1 method here so we don't have to repeat
+            //all that code. It's static, so I can just call the method--no instance req'd.
             {
-                Console.WriteLine($"{product.ProductID} {product.Name}");
-            }
-            
+                //created an instance so we can call methods that query the database
+                var prodRepo = new ProductRepository(conn);
 
+                Console.WriteLine($"What is the new product's name?");
+                var prodName = Console.ReadLine();
+
+                Console.WriteLine($"What is the new product's price?");
+                var price = Convert.ToDouble(Console.ReadLine());
+
+                Console.WriteLine($"What is the new product's category ID?");
+                var categoryID = Convert.ToInt32(Console.ReadLine());
+
+                //Method goes to database and inserts the new product
+                prodRepo.CreateProduct(prodName, price, categoryID);
+
+                //Call the GetAllProducts() using that instance, storing result in
+                //the products variable
+                var products = prodRepo.GetAllProducts();
+
+                //Print each product from the products collection to the console
+                foreach (var product in products)
+                {
+                    Console.WriteLine($"{product.ProductID} {product.Name}");
+                }
+
+            }
+            /*
             public static void ListDepartments() //Updating from Michael's video
             {
                 var repo = new DepartmentRepository(conn)
@@ -71,10 +80,10 @@ namespace BestBuyBestPractices
 
                     var newName = Console.ReadLine();
 
-                    repo.UpdateDepartment(id, newName);
+                    repo.UpdateDepartment(id, newName); 
                 }
             }
-        }
+       */
     }
 }
 

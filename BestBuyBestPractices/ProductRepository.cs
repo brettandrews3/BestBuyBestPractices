@@ -19,7 +19,7 @@ namespace BestBuyBestPractices
             return _connection.Query<Product>("SELECT * FROM products");
             //using our Dapper query to pull from SQL database
         }
-        public void CreateProduct(string name, int price, int categoryID)
+        public void CreateProduct(string name, double price, int categoryID)
         {
             _connection.Execute("INSERT INTO products (Name, Price, CategoryID) VALUES(@productName, @price, @categoryID);",
                 new { productName = name, price = price, categoryID = categoryID });
